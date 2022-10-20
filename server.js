@@ -48,7 +48,7 @@ app.get("/addStudent", (req, res) => {
 app.post("/addStudent", (req, res) => {
     dataPrep.addStudent(req.body).then((data)=>{
         const Html = "<h2>The New Student Information</h2>" + "Student ID: " + data.studId + "<br /><br />" + "Student name: " + data.name + "<br /><br />" + "Program: " + data.program + "<br /><br />" + "GPA: " + data.gpa + "<a href='/allStudents'>All Students</a><br /><a href='/'>Go Home</a>";
-      res.json(Html);
+        res.json(Html);
     }).catch((err) => {
         console.log(err);
     })
