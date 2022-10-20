@@ -63,13 +63,13 @@ module.exports = {
     }, getStudent: function(id){
         let studentNum = [];
         return new Promise(function(resolve, reject){
-            for(let i = 0; i < employees[0].length; i++){
+            for(let i = 0; i < students[0].length; i++){
                 if(students[0][i].studId == id){
                     studentNum.push(students[0][i]);
                 }
             }
             if(studentNum.length > 0){
-                resolve(studentNum);
+                resolve(studentNum[0]);
             }
             else{
                 reject("no results returned");

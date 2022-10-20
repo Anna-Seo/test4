@@ -1,4 +1,4 @@
-//URL: https://perfect-fox-jewelry.cyclic.app
+//App URL: https://tame-puce-tadpole-toga.cyclic.app
 
 const express = require("express");
 const app = express();
@@ -48,7 +48,7 @@ app.get("/addStudent", (req, res) => {
 app.post("/addStudent", (req, res) => {
     dataPrep.addStudent(req.body).then((data)=>{
         const Html = "<h2>The New Student Information</h2>" + "Student ID: " + data.studId + "<br /><br />" + "Student name: " + data.name + "<br /><br />" + "Program: " + data.program + "<br /><br />" + "GPA: " + data.gpa + "<a href='/allStudents'>All Students</a><br /><a href='/'>Go Home</a>";
-      res.send(Html);
+      res.json(Html);
     }).catch((err) => {
         console.log(err);
     })
@@ -56,7 +56,7 @@ app.post("/addStudent", (req, res) => {
 
 app.get("/student/:studId", (req, res) => {
     dataPrep.getStudent(req.params.studId).then((data) => {
-    const Html = "<h2>This Student Information</h2>" + "Student ID: " + data.studId + "<br /><br />" + "Student name: " + data.name + "<br /><br />" + "Program: " + data.program + "<br /><br />" + "GPA: " + data.gpa + "<a href='/allStudents'>All Students</a><br /><a href='/'>Go Home</a>";
+    const Html = "<h2>This Student Information</h2>" + "Student ID: " + data.studId + "<br /><br />" + "Student name: " + data.name + "<br /><br />" + "Program: " + data.program + "<br /><br />" + "GPA: " + data.gpa + "<br /><br /><a href='/allStudents'>All Students</a><br /><a href='/'>Go Home</a>";
       res.send(Html);
     }).catch((err) => {
       console.log(err);
