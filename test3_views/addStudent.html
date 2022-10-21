@@ -1,6 +1,7 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
     <style>
       fieldset{
         text-align:left;
@@ -12,25 +13,25 @@
   </head>
   <body>
     <h1>Add Student</h1>
+      <form method="post" action="/addStudent">
         <fieldset>
         <legend>Student Information</legend>
-      <form action="/addStudent" method="POST">
-        <label for="studentId">Student Id:</label>
-        <input id="studentId" type="text"/><br />
-        <label for="studentName">Student Name:</label>
-        <input id="studentName" type="text"/><br />
+        <label for="studId">Student Id:</label>
+        <input class="form-control" id="studId" name="studId" type="text" /><br />
+        <label for="name">Student Name:</label>
+        <input class="form-control"id="name" name="name" type="text" /><br />
         <label for="program">Program:</label>
-        <select>
+        <select class="form-control" id="program" name="program">
             <option value="bsd">BSD</option>
             <option value="cpa">CPA</option>
             <option value="dsa">DSA</option>
         </select>
         <br />
         <label for="gpa">GPA:</label>
-        <input id="gpa" type="text"/><br />
-        <button type="submit">Add Student</button>
-        <button type="reset">Reset</button>
-      </form>
+        <input class="form-control" id="gpa" name="gpa" type="text" /><br />
+        <input type="submit" value="Add Student">
+        <input type="reset" value="Reset">
     </fieldset>
+  </form>
   </body>
 </html>
