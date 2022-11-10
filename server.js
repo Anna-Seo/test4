@@ -10,16 +10,25 @@ function onHttpStart() {
   console.log("Express http server listening on: " + HTTP_PORT);
 }
 
+const exphbs = require('express-handlebars');
+app.engine('.hbs', exphbs.engine({ 
+  extname: '.hbs',
+  defaultLayout: 'main'
+}));
+app.set('view engine', '.hbs');
+
+app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get("/", (req, res) => {
-    res.send("<h2>Declaration (Instruction: test size in heading 2):</h2><p>The rest text is displayed in paragraph as shown in screenshot.<br /><br />I acknowledge the College's academic integrity policy - and my own integrity - remain in effect whether my work is done remotely or onsite. Any test or assignment is an act of trust between me and my instructor, and especially with my classmates... even when no one is watching. I declare I will not break that trust.<br /><br /> Name: <mark>Anna Seo</mark> <br /><br /> Student Number: <mark>110186202</mark> <br /><br /><ul><li><a href='/CPA'>CPA Students</a></li><li><a href='/highGPA'>Highest GPA</a></li><li><a href='/allStudents'>All Students</a></li><li><a href='/addStudent'>Add A New Student</a></li><li>Note: Locate specific student by student Id, e.g., http://localhost:8080/student/3</li></ul></p>");
+  res.render('home', {
+  });
 });
 
 app.get("/CPA", (req, res) => {
     dataPrep.cpa().then((data) => {
-      res.json(data);
+      res.render("students",{students:data});
     }).catch((err) => {
       console.log(err);
     })
@@ -27,8 +36,7 @@ app.get("/CPA", (req, res) => {
 
 app.get("/highGPA", (req, res) => {
   dataPrep.highGPA().then((data) => {
-    const Html = "<h2>Highest GPA:</h2>" + "Student ID: " + data.studId + "<br /><br />" + "Name: " + data.name + "<br /><br />" + "Program: " + data.program + "<br /><br />" + "GPA: " + data.gpa;
-    res.send(Html);
+    res.render("student",{student:data});
   }).catch((err) => {
     console.log(err);
   })
@@ -36,7 +44,7 @@ app.get("/highGPA", (req, res) => {
 
 app.get("/allStudents", (req, res) => {
     dataPrep.allStudents().then((data) => {
-        res.json(data);
+      res.render("students",{students:data});
     }).catch((err) => {
       console.log(err);
     })
@@ -47,9 +55,8 @@ app.get("/addStudent", (req, res) => {
 });
 
 app.post("/addStudent", (req, res) => {
-  dataPrep.addStudent(req.body).then((data)=>{
-    const Html = "<h2>The New Student Information</h2>" + "Student ID: " + req.body.studId + "<br /><br />" + "Student name: " + req.body.name + "<br /><br />" + "Program: " + req.body.program + "<br /><br />" + "GPA: " + req.body.gpa + "<br /><br /><a href='/allStudents'>All Students</a><br /><a href='/'>Go Home</a>";
-    res.send(Html);
+  dataPrep.addStudent(req.body).then(()=>{
+    res.render('student',{student:req.body});
   }).catch((err) => {
     console.log(err);
   })
@@ -57,8 +64,7 @@ app.post("/addStudent", (req, res) => {
 
 app.get("/student/:studId", (req, res) => {
   dataPrep.getStudent(req.params.studId).then((data) => {
-  const Html = "<h2>This Student Information</h2>" + "Student ID: " + data.studId + "<br /><br />" + "Student name: " + data.name + "<br /><br />" + "Program: " + data.program + "<br /><br />" + "GPA: " + data.gpa + "<br /><br /><a href='/allStudents'>All Students</a><br /><a href='/'>Go Home</a>";
-    res.send(Html);
+    res.render('student',{student:data});
   }).catch((err) => {
     console.log(err);
   })
