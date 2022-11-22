@@ -8,7 +8,7 @@ var dataPrep = require('./data_prep');
 
 function onHttpStart() {
   console.log("Express http server listening on: " + HTTP_PORT);
-}
+} 
 
 const exphbs = require('express-handlebars');
 app.engine('.hbs', exphbs.engine({ 
