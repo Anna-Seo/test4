@@ -1,4 +1,4 @@
-//App URL: https://rich-plum-iguana-shoe.cyclic.app
+//App URL: 
 
 const express = require("express");
 const app = express();

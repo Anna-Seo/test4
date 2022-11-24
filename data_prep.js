@@ -1,79 +1,89 @@
-const students = [];
+const Sequelize = require('sequelize');
+
+var sequelize = new Sequelize('qtsvubob', 'qtsvubob', 'NFVpZO7ehl0OaOaymP6ZQEb1h4Sm0MNW', {
+    host: 'peanut.db.elephantsql.com',
+    dialect: 'postgres',
+    port: 5432,
+    dialectOptions: {
+    ssl: true
+    },
+    query:{raw: true}
+});   
+
+sequelize.authenticate()
+.then(()=> console.log('Connection success.'))
+.catch((err)=>console.log("Unable to connect to DB.", err));
+
+var Student = sequelize.define('Student', {
+    StudId: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name: Sequelize.STRING,
+    program: Sequelize.STRING,
+    gpa: Sequelize.FLOAT,
+}, {
+    createdAt: false,
+    updatedAt: false
+});
+
 module.exports = {
     prep: function(){
-        let fs = require('fs');
         let myPromise = new Promise(function(resolve, reject){
-            try {
-                fs.readFile('./student.json', 'utf-8', (err,data)=>{
-                    if(err) throw err;
-                    else{
-                        students.push(JSON.parse(data));
-                }})
+            sequelize.sync().then(() => {
                 resolve();
-            }
-            catch(error){
-                reject("unable to read file");
-            }
+            }).catch(err => {
+                reject("unable to sync the database");
+            })
         })
         return myPromise;
     }, cpa: function(){
-        let cpaStudents = [];
         return new Promise(function(resolve, reject){
-            for(let i = 0; i < students[0].length; i++){
-                if(students[0][i].program == 'CPA'){
-                    cpaStudents.push(students[0][i]);
-                }
-            }
-            if(cpaStudents.length > 0){
-                resolve(cpaStudents);
-            }
-            else {
+            Student.findAll({
+                where:{program:'cpa'}
+            }).then(function(data){
+                resolve(data);
+            }).catch(function(){
                 reject("no results returned");
-            }
+            });
         }); 
     }, highGPA: function(){
-        let highestGPA = students[0][0];
         return new Promise(function(resolve, reject){
-            for(let i = 0; i < students[0].length; i++){
-                if(students[0][i].gpa > highestGPA.gpa){
-                    highestGPA = students[0][i];
-                }
-            }
-            if(highestGPA){
-                resolve(highestGPA);
-            }
-            else{
-                reject("Failed finding the student with the highest GPA");
-            }
+            Student.findAll({
+                order:sequelize.literal('gpa DESC')
+            }).then(function(data){
+                resolve(data[0]);
+            }).catch(function(){
+                reject("no results returned");
+            })
         }); 
     }, allStudents: function(){
         return new Promise(function(resolve, reject){
-            if(students[0].length > 0){
-                resolve(students[0]);
-            }
-            else{
+            Student.findAll({
+            }).then(function(data){
+                resolve(data);
+            }).catch(function(){
                 reject("no results returned");
-            }
+            })
         }); 
     }, addStudent: function(student_object) {
         return new Promise(function(resolve, reject){
-            students[0].push(student_object);
-            resolve();
+            Student.create(student_object).then(function(){
+                resolve();
+            }).catch(function(){
+                reject("unable to add the student");
+            })
         }); 
     }, getStudent: function(id){
-        let studentNum = [];
         return new Promise(function(resolve, reject){
-            for(let i = 0; i < students[0].length; i++){
-                if(students[0][i].studId == id){
-                    studentNum.push(students[0][i]);
-                }
-            }
-            if(studentNum.length > 0){
-                resolve(studentNum[0]);
-            }
-            else{
+            Student.findAll({
+                where:{StudId:id}
+            }).then(function(data){
+                resolve(data);
+            }).catch(function(){
                 reject("no results returned");
-            }
+            })
         }); 
     }
 }
